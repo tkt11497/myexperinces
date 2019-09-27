@@ -399,6 +399,9 @@ import MoneyInformation from "@/components/VoucherDetails/MoneyInformation.vue";
 
 export default {
   middleware: ["auth"],
+  validate({ params }) {
+    return false;
+  },
   components: {
     AppLoading,
     AppLog,

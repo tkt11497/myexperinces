@@ -251,7 +251,9 @@ import AppDeleteConfirmation from "@/components/App/DeleteConfirmation";
 
 export default {
   middleware: ["auth"],
-
+  validate({ params }) {
+    return false;
+  },
   components: { AppDeleteConfirmation },
   data() {
     return {

@@ -55,11 +55,11 @@
             @click="createNewNormalVoucher"
             :disabled="is_closed"
           >New Voucher (ctrl + 1)</v-btn>
-          <v-btn
+          <!-- <v-btn
             color="primary"
             @click="createNewBusStationVoucher"
             :disabled="is_closed"
-          >Bus-station Drop Off (ctrl + 2)</v-btn>
+          >Bus-station Drop Off (ctrl + 2)</v-btn>-->
           <v-btn v-print color="primary">Print</v-btn>
 
           <v-btn
@@ -76,7 +76,7 @@
             class="v-btn v-btn--normal primary"
           >Export</download-excel>
         </v-layout>
-        <v-layout row wrap justify-end>
+        <!-- <v-layout row wrap justify-end>
           <v-btn
             color="primary"
             @click="show = !show"
@@ -84,7 +84,7 @@
             :disabled="is_closed"
           >{{ show ? "Cancel" : "Import" }}</v-btn>
           <input label="File input" type="file" @change="importVouchers" v-show="show" />
-        </v-layout>
+        </v-layout>-->
       </v-flex>
       <v-spacer></v-spacer>
     </v-layout>

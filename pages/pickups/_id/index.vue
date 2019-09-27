@@ -127,8 +127,7 @@
                   min="0"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs2 class="cell">
-                <!-- global_scale -->
+              <!-- <v-flex xs2 class="cell">
                 <v-layout row wrap>
                   <v-flex xs6>
                     <v-text-field
@@ -155,7 +154,7 @@
                     ></v-text-field>
                   </v-flex>
                 </v-layout>
-              </v-flex>
+              </v-flex>-->
               <v-flex class="cell" xs1>
                 <v-autocomplete
                   :ref="`normal-${index}-paymentType`"
@@ -179,7 +178,7 @@
                   min="0"
                 ></v-text-field>
               </v-flex>
-              <v-flex class="cell" xs1>
+              <!-- <v-flex class="cell" xs1>
                 <v-autocomplete
                   :ref="`normal-${index}-callStatus`"
                   :name="`normal-${index}-callStatus`"
@@ -198,7 +197,10 @@
                   item-text="status_mm"
                   item-value="id"
                 ></v-autocomplete>
-              </AppCell>
+              </AppCell>-->
+              <v-flex class="cell" xs1>
+                <v-text-field browser-autocomplete="off" :disabled="true" type="text" min="0"></v-text-field>
+              </v-flex>
               <AppCell>
                 <v-btn
                   color="green darken-1"
@@ -257,15 +259,16 @@
                 }}
               </v-flex>
               <AppCell>{{ normalVoucherForm.total_item_price }}</AppCell>
-              <v-flex
+              <!-- <v-flex
                 xs2
                 class="cell"
-              >{{ `${normalVoucherForm.lwh || 20} - ${normalVoucherForm.weight}`}}</v-flex>
+              >{{ `${normalVoucherForm.lwh || 20} - ${normalVoucherForm.weight}`}}</v-flex>-->
               <AppCell>{{ normalVoucherForm.payment_type.name_mm }}</AppCell>
 
               <AppCell>{{ normalVoucherForm.total_delivery_amount }}</AppCell>
-              <AppCell>{{ normalVoucherForm.call_status.status_mm }}</AppCell>
-              <AppCell>{{ normalVoucherForm.store_status.id == 2 ? normalVoucherForm.store_status.status_mm : 'စောင့်ဆိုင်း' }}</AppCell>
+              <!-- <AppCell>{{ normalVoucherForm.call_status.status_mm }}</AppCell>
+              <AppCell>{{ normalVoucherForm.store_status.id == 2 ? normalVoucherForm.store_status.status_mm : 'စောင့်ဆိုင်း' }}</AppCell>-->
+              <AppCell>{{ normalVoucherForm.delivery_status.id != 8 ? 'ပို့မရ' : normalVoucherForm.delivery_status.status_mm }}</AppCell>
               <v-flex xs1 class="cell">
                 <v-layout :class="hover ? 'show' : 'hide'">
                   <v-btn
@@ -306,7 +309,7 @@
         </button>
       </div>
 
-      <div>
+      <!-- <div>
         <v-layout row wrap mx-3 my-3>
           <h6 class="title">Bus Station Vouchers</h6>
         </v-layout>
@@ -499,7 +502,6 @@
                     ></v-text-field>
                   </AppCell>
                   <v-flex xs2>
-                    <!-- global_scale -->
                     <v-layout style="height: 100%">
                       <v-flex class="cell" xs6>
                         <v-text-field
@@ -586,10 +588,10 @@
             </v-layout>
           </form>
         </div>
-      </div>
-      <v-layout>
+      </div>-->
+      <v-layout mt-3>
         <v-flex xs6>
-          <v-layout>
+          <!-- <v-layout>
             <v-btn color="primary" @click="showHistory">
               {{
               interpretedLogs.length === 0
@@ -597,7 +599,7 @@
               : "Update Pickup History"
               }}
             </v-btn>
-          </v-layout>
+          </v-layout>-->
           <v-layout mt-2 pr-5>
             <AppLog :interpretedLogs="interpretedLogs"></AppLog>
           </v-layout>
@@ -605,12 +607,12 @@
         <v-flex xs3></v-flex>
         <v-flex xs3>
           <v-layout>
-            <v-checkbox
+            <!-- <v-checkbox
               @click.native="onPickupFeeUpdate"
               label="Pickup fee"
               v-model="take_pickup_fee"
               :disabled="is_closed"
-            ></v-checkbox>
+            ></v-checkbox>-->
           </v-layout>
           <CostInformation
             :titleEn="'Prepaid'"
@@ -1960,7 +1962,8 @@ export default {
       return false;
     },
     goDetails(voucherId) {
-      this.$router.push("/vouchers/details?voucherId=" + voucherId);
+      return;
+      // this.$router.push("/vouchers/details?voucherId=" + voucherId);
     }
   },
   mounted() {

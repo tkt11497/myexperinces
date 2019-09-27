@@ -63,44 +63,28 @@ export const interpretLog = ({
 }) => {
   return logs.map((log, index) => {
     if (log.next) {
-      log.next = validator.isNumeric(log.next) ?
-        parseInt(log.next, 10) :
-        log.next;
+      log.next = validator.isNumeric(log.next)
+        ? parseInt(log.next, 10)
+        : log.next;
     }
     if (log.previous) {
-      log.previous = validator.isNumeric(log.previous) ?
-        parseInt(log.previous, 10) :
-        log.previous;
+      log.previous = validator.isNumeric(log.previous)
+        ? parseInt(log.previous, 10)
+        : log.previous;
     }
-    const foundLog = logStatuses.find(({
-      id
-    }) => id === log.log_status_id);
-    const createdBy = staffs.find(({
-      id
-    }) => id === log.created_by);
+    const foundLog = logStatuses.find(({ id }) => id === log.log_status_id);
+    const createdBy = staffs.find(({ id }) => id === log.created_by);
     let next = log.next;
     let previous = log.previous;
     if (log.log_status_id === 10) {
-      next = staffs.find(({
-        id
-      }) => id === next).username;
-      previous = staffs.find(({
-        id
-      }) => id === previous).username;
+      next = staffs.find(({ id }) => id === next).username;
+      previous = staffs.find(({ id }) => id === previous).username;
     } else if (log.log_status_id === 1) {
-      next = deliveryStatuses.find(({
-        id
-      }) => id === next).status;
-      previous = deliveryStatuses.find(({
-        id
-      }) => id === previous).status;
+      next = deliveryStatuses.find(({ id }) => id === next).status;
+      previous = deliveryStatuses.find(({ id }) => id === previous).status;
     } else if (log.log_status_id === 3) {
-      next = storeStatuses.find(({
-        id
-      }) => id === next).status;
-      previous = storeStatuses.find(({
-        id
-      }) => id === previous).status;
+      next = storeStatuses.find(({ id }) => id === next).status;
+      previous = storeStatuses.find(({ id }) => id === previous).status;
     }
     const modifiedLog = {
       ...log,
@@ -118,17 +102,14 @@ const openSnackBar = (that, snackbarMessage) => {
   that.snackbar = true;
 };
 
-export const handleStatus = ({
-  status,
-  message,
-  that,
-  successMessage
-}) => {
+export const handleStatus = ({ status, message, that, successMessage }) => {
   if (status === 1) {
     openSnackBar(that, successMessage);
     return true;
   } else if (status === 2) {
-    typeof message === "object" ? openSnackBar(that, Object.values(message)[0][0]) : openSnackBar(that, message);
+    typeof message === "object"
+      ? openSnackBar(that, Object.values(message)[0][0])
+      : openSnackBar(that, message);
     return false;
   } else if (status === 3) {
     that.$router.push("/");
@@ -139,10 +120,7 @@ export const handleStatus = ({
   }
 };
 
-export const handleStatusInAsyncData = async ({
-  status,
-  context
-}) => {
+export const handleStatusInAsyncData = async ({ status, context }) => {
   if (status !== 1) {
     await localforage.clear();
     context.redirect("/login");

@@ -36,7 +36,6 @@ export default {
   },
   methods: {
     getReceiverZones() {
-      console.log(this.voucher);
       try {
         return this.cities.find(
           ({ id }) => id === getId(this.voucher.receiver_city)

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div @shortkey="createNewBusStationVoucher" v-shortkey="['ctrl', '2']"></div>
+    <!-- <div @shortkey="createNewBusStationVoucher" v-shortkey="['ctrl', '2']"></div> -->
     <div @shortkey="createNewNormalVoucher" v-shortkey="['ctrl', '1']"></div>
     <div @shortkey="onSubmit" v-shortkey="['ctrl', 's']"></div>
     <div @shortkey="$router.go(-1)" v-shortkey="['ctrl', 'b']"></div>

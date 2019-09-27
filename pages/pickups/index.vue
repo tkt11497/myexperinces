@@ -42,8 +42,8 @@
       <v-flex xs1 class="cell font-weight-bold" text-xs-center pa-2>Phone</v-flex>
       <v-flex xs2 class="cell font-weight-bold" text-xs-center pa-2>Address</v-flex>
       <v-flex xs2 class="cell font-weight-bold" text-xs-center pa-2>City/ Zone</v-flex>
-      <v-flex xs1 class="cell font-weight-bold" text-xs-center pa-2>Picked By</v-flex>
-      <v-flex xs2 class="cell font-weight-bold" text-xs-center pa-2>Note</v-flex>
+      <!-- <v-flex xs1 class="cell font-weight-bold" text-xs-center pa-2>Picked By</v-flex> -->
+      <v-flex xs3 class="cell font-weight-bold" text-xs-center pa-2>Note</v-flex>
       <v-flex xs1 class="cell font-weight-bold" text-xs-center pa-2>Date</v-flex>
       <v-flex xs1 class="cell font-weight-bold" text-xs-center pa-2>Actions</v-flex>
     </v-layout>
@@ -74,8 +74,8 @@
             <AppCell>{{ pickupForm.phone }}</AppCell>
             <v-flex xs2 class="cell">{{ pickupForm.address }}</v-flex>
             <v-flex xs2 class="cell">{{ `${pickupForm.city || ""} - ${pickupForm.zone || ""}` }}</v-flex>
-            <AppCell>{{ pickupForm.openedBy }}</AppCell>
-            <v-flex xs2 class="cell">{{ pickupForm.note }}</v-flex>
+            <!-- <AppCell>{{ pickupForm.openedBy }}</AppCell> -->
+            <v-flex xs3 class="cell">{{ pickupForm.note }}</v-flex>
             <AppCell>{{ pickupForm.createdAt }}</AppCell>
             <AppCell>
               <v-layout :class="hover ? 'show' : 'hide'" row wrap>
@@ -212,9 +212,9 @@
               </v-flex>
             </v-layout>
           </v-flex>
-          <AppCell>
-            <!-- :loading="isDeliverySearchLoading"
-            :search-input.sync="delivery_search"-->
+          <!-- <AppCell>
+            :loading="isDeliverySearchLoading"
+            :search-input.sync="delivery_search"
             <v-autocomplete
               label="Staff"
               :items="staffsAutoCompletesValues"
@@ -226,8 +226,8 @@
               :ref="'' + index + '-openedBy'"
               :id="'' + index + '-openedBy'"
             ></v-autocomplete>
-          </AppCell>
-          <v-flex xs2 class="cell">
+          </AppCell>-->
+          <v-flex xs3 class="cell">
             <v-text-field
               browser-autocomplete="off"
               :disabled="pickupForm.isLocked"
@@ -553,7 +553,8 @@ export default {
         .zones.map(({ name }) => name);
       this.pickupForms = [newPickUpForm, ...this.pickupForms];
       this.$nextTick(() => {
-        this.$refs["0-openedBy"][0].focus();
+        // this.$refs["0-openedBy"][0].focus();
+        this.$refs["0-note"][0].focus();
       });
     },
     updatePickupFormData({ status, message, data, index, pickupForm }) {
@@ -626,7 +627,8 @@ export default {
           if (pickupForm.status === "Customer") {
             this.$refs[`${this.editingRowIndex}-sender`][0].focus();
           } else {
-            this.$refs[`${this.editingRowIndex}-openedBy`][0].focus();
+            // this.$refs[`${this.editingRowIndex}-openedBy`][0].focus();
+            this.$refs[`${this.editingRowIndex}-note`][0].focus();
           }
         }
         this.updatePickupFormData({
@@ -794,7 +796,8 @@ export default {
       if (this.pickupForms[this.sIndex].status === "Customer") {
         this.$refs[`${this.sIndex}-sender`][0].focus();
       } else {
-        this.$refs[`${this.sIndex}-openedBy`][0].focus();
+        // this.$refs[`${this.sIndex}-openedBy`][0].focus();
+        this.$refs[`${this.sIndex}-note`][0].focus();
       }
     },
     async delRow() {
