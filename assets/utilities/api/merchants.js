@@ -163,5 +163,12 @@ export default {
       `${MERCHANTS_ASSOCIATE_URL}/${that.deletingId}`,
       setJwtHeaders(that.jwt)
     );
+  },
+  updateMerchant: that => {
+    return that.$axios.post(
+      `${process.env.baseUrl}/auth/profile`,
+      that.merchant,
+      setJwtHeaders(that.jwt)
+    );
   }
 };

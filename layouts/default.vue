@@ -92,6 +92,7 @@ export default {
               to: "/dashboard/universal_pickup_sheet",
               icon: "assignment"
             },
+            { name: "Profile", to: "/dashboard/profile", icon: "person" },
             { name: "Log Out", to: "/dashboard/log_out", icon: "exit_to_app" }
           ]
         }

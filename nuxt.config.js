@@ -104,8 +104,8 @@ module.exports = {
   env: {
     baseUrl:
       process.env.NODE_ENV === "production"
-        ? "https://marathonmyanmar.net/api/v1/merchant_dashboard"
-        : "https://marathonmyanmar.net/api/v1/merchant_dashboard"
+        ? "https://marathonmyanmar.org/api/v1/merchant_dashboard"
+        : "https://marathonmyanmar.org/api/v1/merchant_dashboard"
   }
   // transition: {
   //   name: "fade",
