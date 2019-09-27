@@ -1,0 +1,46 @@
+{
+  "name": "marathon-app",
+  "version": "1.0.0",
+  "description": "My remarkable Nuxt.js project",
+  "productName": "Marathon Desktop App",
+  "author": "Kaung Myat Hein",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development node server/index.js --watch server",
+    "share_dev": "NUXT_HOST=0.0.0.0 NUXT_PORT=3000 nuxt",
+    "build": "nuxt build",
+    "start": "cross-env NODE_ENV=production node server/index.js",
+    "generate": "nuxt generate",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/images/logo.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . marathon-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Marathon App\"",
+    "package-linux": "electron-packager . marathon-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/images/marathon_logo.png --prune=true --out=release-builds"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-qrcode": "^1.0.1",
+    "@nuxtjs/axios": "^5.5.4",
+    "awesome-phonenumber": "^2.13.0",
+    "axios": "^0.18.1",
+    "cross-env": "^5.2.0",
+    "express": "^4.17.1",
+    "localforage": "^1.7.3",
+    "moment": "^2.24.0",
+    "nuxt": "^2.8.1",
+    "validator": "^10.11.0",
+    "vee-validate": "^2.2.11",
+    "vue": "^2.6.10",
+    "vue-json-excel": "^0.2.98",
+    "vue-loader": "^15.7.0",
+    "vue-print-nb": "^1.3.0",
+    "vue-select": "^2.6.4",
+    "vue-server-renderer": "^2.6.10",
+    "vue-shortkey": "^3.1.7",
+    "vue-template-compiler": "^2.6.10",
+    "vuetify": "^1.5.16",
+    "xlsx": "^0.15.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.1",
+    "stylus": "^0.54.5",
+    "stylus-loader": "^3.0.2"
+  }
+}
