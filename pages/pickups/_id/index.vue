@@ -82,7 +82,7 @@
                   :error="!normalVoucherForm.receiver.address"
                 ></v-text-field>
               </v-flex>
-              <v-flex xs2 class="cell">
+              <v-flex xs1 class="cell">
                 <v-layout row wrap>
                   <v-flex xs6>
                     <v-autocomplete
@@ -114,6 +114,16 @@
                     ></v-autocomplete>
                   </v-flex>
                 </v-layout>
+              </v-flex>
+              <v-flex class="cell" xs2>
+                <!-- total_item_price -->
+                <v-text-field
+                  browser-autocomplete="off"
+                  :ref="`normal-${index}-remark`"
+                  :name="`normal-${index}-remark`"
+                  :disabled="normalVoucherForm.is_closed"
+                  v-model="normalVoucherForm.remark"
+                ></v-text-field>
               </v-flex>
               <v-flex class="cell" xs1>
                 <!-- total_item_price -->
@@ -249,7 +259,7 @@
               <AppCell>{{ normalVoucherForm.receiver.name }}</AppCell>
               <AppCell>{{ normalVoucherForm.receiver.phone }}</AppCell>
               <v-flex xs2 class="cell">{{ normalVoucherForm.receiver.address }}</v-flex>
-              <v-flex xs2 class="cell">
+              <v-flex xs1 class="cell">
                 {{
                 `${normalVoucherForm.receiver_city.name} - ${
                 normalVoucherForm.receiver_zone
@@ -258,6 +268,7 @@
                 }`
                 }}
               </v-flex>
+              <v-flex xs2 class="cell">{{ normalVoucherForm.remark || "--Empty--" }}</v-flex>
               <AppCell>{{ normalVoucherForm.total_item_price }}</AppCell>
               <!-- <v-flex
                 xs2
@@ -1435,7 +1446,8 @@ export default {
         call_status,
         store_status,
         global_scale,
-        weight
+        weight,
+        remark
       } = form;
       let global_scale_id = 1;
       if (parcels) {
@@ -1504,7 +1516,8 @@ export default {
         store_status_id: getId(store_status),
         total_item_price,
         global_scale_id,
-        weight
+        weight,
+        remark
       };
     },
     async updateVoucherStatus({ form }) {
