@@ -895,9 +895,10 @@ export default {
         "ATC Sender": "amount_to_collect_sender",
         "ATC Receiver": "amount_to_collect_receiver",
         "Delivery Fee": "total_delivery_amount",
-        "Bus Station": "sender_bus_station",
-        Gate: "sender_gate",
-        "Bus Fee": "total_bus_fee",
+        "Delivery Status":  {
+          callback: voucher =>
+            voucher.delivery_status.id != 8 ? 'ပို့မရ' : voucher.delivery_status.status_mm
+        },
         Note: "remark"
       }
     };
