@@ -32,6 +32,8 @@ import doorToDoors from "./doorToDoors";
 import busDropOffs from "./busDropOffs";
 import agents from "./agents";
 import attendances from "./attendances";
+import dashboard from "./dashboard";
+
 
 export default {
   ...cities,
@@ -67,5 +69,6 @@ export default {
   ...doorToDoors,
   ...busDropOffs,
   ...agents,
-  ...attendances
+  ...attendances,
+  ...dashboard
 };

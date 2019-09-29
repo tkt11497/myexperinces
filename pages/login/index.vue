@@ -237,7 +237,7 @@ export default {
             // localforage.setItem("stored:departments", responses[24].data),
             // localforage.setItem("stored:agents", responses[25].data)
           ]);
-          this.$router.push("/pickups");
+          this.$router.push("/dashboard");
         }
         if (response.status === 2) {
           this.errorMessage = response.message;

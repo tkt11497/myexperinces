@@ -79,6 +79,10 @@ export default {
         // items: [{ name: "Pick Up", to: "/pickups", icon: "departure_board" }]
         // },
         {
+          header: { name: "Dashboard", icon: "memory" },
+          items: [{ name: "Dashboard", to: "/dashboard", icon: "memory" }]
+        },
+        {
           header: { name: "General", icon: "memory" },
           items: [
             // {

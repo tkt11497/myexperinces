@@ -1122,7 +1122,7 @@ export default {
       }
     },
     async closePickup() {
-      if (!this.opened_by) return this.showSnackbar("Pickup need to assign.");
+      // if (!this.opened_by) return this.showSnackbar("Pickup need to assign.");
       const { id, jwt, $axios } = this;
       if (this.normalForms.length === 0 && this.stationForms.length === 0)
         return this.showSnackbar(
