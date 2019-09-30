@@ -80,7 +80,6 @@
                 v-model="merchant_associate.account_name"
                 name="account_name"
                 type="text"
-                v-validate="'required'"
                 :error="!!errors.first('account_name')"
                 :error-messages="errors.first('account_name')"
               ></v-text-field>
@@ -92,7 +91,6 @@
                 v-model="merchant_associate.account_no"
                 name="account_no"
                 type="text"
-                v-validate="'required'"
                 :error="!!errors.first('account_no')"
                 :error-messages="errors.first('account_no')"
               ></v-text-field>
@@ -123,8 +121,9 @@
 
 <script>
 import api from "@/assets/utilities/api";
-import { mapGetters } from "vuex";
+import { mapGetters, mapActions } from "vuex";
 import _ from "lodash";
+import localforage from "localforage";
 export default {
   name: "MerchantAssociateForm",
   components: {},
@@ -146,7 +145,6 @@ export default {
     return {
       isFormOpenDialog: false,
       isLoading: false,
-      merchant_id: this.$route.params.id,
       merchant_associate: {
         label: "",
         city: {},
@@ -172,11 +170,9 @@ export default {
     }
   },
   methods: {
-    // onChangeCity() {
-    //   this.selectedZones = this.zones.filter(
-    //     zone => this.merchant_associate.city.id == zone.city.id
-    //   );
-    // },
+    ...mapActions({
+      setUser: "auth/setUser"
+    }),
     async onSave() {
       const isErrorFree = await this.$validator.validateAll();
       if (!isErrorFree) return;
@@ -187,9 +183,11 @@ export default {
       if (this.dialogTitle === "New Merchant Associate") {
         const { data, message, status } = (await api.postMerchantAssociate(
           this,
-          this.merchant_id
+          this.merchant.id
         )).data;
         if (status === 1) {
+          this.setUser([data]);
+          await localforage.setItem("user", [data]);
           this.$parent.$emit("createdNew", data.branches);
         }
         this.$parent.$emit("handleStatus", { status, message, successMessage });
@@ -198,6 +196,8 @@ export default {
           this
         )).data;
         if (status === 1) {
+          this.setUser([data]);
+          await localforage.setItem("user", [data]);
           data.branches.forEach(branch => {
             branch.account_name = _.last(branch.account_informations)
               ? _.last(branch.account_informations).account_name

@@ -282,6 +282,9 @@ export default {
           merchant_associate => merchant_associate.id === this.deletingId
         );
         this.merchant_associates.splice(foundIndex, 1);
+        this.merchant.branches = this.merchant_associates;
+        this.setUser([this.merchant]);
+        await localforage.setItem("user", [this.merchant]);
       }
       this.handleStatus({ status, message, that: this, successMessage });
       this.closeDeleteDialog(this);
