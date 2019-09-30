@@ -135,6 +135,7 @@ export default {
       if (status === 1) {
         this.setUser([this.merchant]);
         this.setTitle(this.merchant.name);
+        await localforage.setItem("user", [this.merchant]);
         if (this.change_password) {
           await localforage.clear();
           this.$router.push("/login");
