@@ -56,7 +56,7 @@
                 <v-text-field
                   browser-autocomplete="off"
                   :loading="isPhoneSearchLoading"
-                  @input="searchPhone"
+                  @keyup.enter="searchPhone"
                   type="tel"
                   :ref="`normal-${index}-receiverPhone`"
                   :name="`normal-${index}-receiverPhone`"
@@ -1067,19 +1067,32 @@ export default {
     CostInformation
   },
   methods: {
-    searchPhone: _.debounce(async function(val) {
+    // searchPhone: _.debounce(async function(val) {
+    //   this.isPhoneSearchLoading = true;
+    //   this.customers = (await this.$api.getCustomers(
+    //     this.$axios,
+    //     this.jwt,
+    //     `${process.env.baseUrl}/customers?search=${val}`
+    //   )).data;
+    //   if (!_.isEmpty(this.customers) && !this.normalForms[0].receiver.name) {
+    //     this.normalForms[0].receiver = _.cloneDeep(this.customers[0]);
+    //   }
+    //   this.customers = [];
+    //   this.isPhoneSearchLoading = false;
+    // }, 1000),
+    async searchPhone() {
       this.isPhoneSearchLoading = true;
       this.customers = (await this.$api.getCustomers(
         this.$axios,
         this.jwt,
-        `${process.env.baseUrl}/customers?search=${val}`
+        `${process.env.baseUrl}/customers?search=${this.normalForms[0].receiver.phone}`
       )).data;
       if (!_.isEmpty(this.customers) && !this.normalForms[0].receiver.name) {
         this.normalForms[0].receiver = _.cloneDeep(this.customers[0]);
       }
       this.customers = [];
       this.isPhoneSearchLoading = false;
-    }, 1000),
+    },
     ...mapActions({
       setNavigationShow: "navigation/setShow",
       setNavigationUrl: "navigation/setUrl"
