@@ -55,21 +55,23 @@
               <v-flex class="cell" xs1>
                 <v-text-field
                   browser-autocomplete="off"
-                  :ref="`normal-${index}-receiverName`"
-                  :name="`normal-${index}-receiverName`"
-                  v-model="normalVoucherForm.receiver.name"
-                  type="'text'"
-                  :error="!normalVoucherForm.receiver.name"
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="cell" xs1>
-                <v-text-field
-                  browser-autocomplete="off"
+                  :loading="isPhoneSearchLoading"
+                  @input="searchPhone"
                   type="tel"
                   :ref="`normal-${index}-receiverPhone`"
                   :name="`normal-${index}-receiverPhone`"
                   v-model="normalVoucherForm.receiver.phone"
                   :error="!normalVoucherForm.receiver.phone"
+                ></v-text-field>
+              </v-flex>
+              <v-flex class="cell" xs1>
+                <v-text-field
+                  browser-autocomplete="off"
+                  :ref="`normal-${index}-receiverName`"
+                  :name="`normal-${index}-receiverName`"
+                  v-model="normalVoucherForm.receiver.name"
+                  type="'text'"
+                  :error="!normalVoucherForm.receiver.name"
                 ></v-text-field>
               </v-flex>
               <v-flex class="cell" xs2>
@@ -256,8 +258,8 @@
           <v-hover>
             <v-layout slot-scope="{ hover }">
               <AppCell>{{ getVoucherNumberAndStatus(normalVoucherForm) }}</AppCell>
-              <AppCell>{{ normalVoucherForm.receiver.name }}</AppCell>
               <AppCell>{{ normalVoucherForm.receiver.phone }}</AppCell>
+              <AppCell>{{ normalVoucherForm.receiver.name }}</AppCell>
               <v-flex xs2 class="cell">{{ normalVoucherForm.receiver.address }}</v-flex>
               <v-flex xs1 class="cell">
                 {{
@@ -850,6 +852,8 @@ export default {
   middleware: ["auth"],
   data() {
     return {
+      customers: [],
+      isPhoneSearchLoading: false,
       printNormalFormsHeaders: [
         { text: "#", sortable: false },
         { text: "Voucher", sortable: false },
@@ -895,9 +899,11 @@ export default {
         "ATC Sender": "amount_to_collect_sender",
         "ATC Receiver": "amount_to_collect_receiver",
         "Delivery Fee": "total_delivery_amount",
-        "Delivery Status":  {
+        "Delivery Status": {
           callback: voucher =>
-            voucher.delivery_status.id != 8 ? 'ပို့မရ' : voucher.delivery_status.status_mm
+            voucher.delivery_status.id != 8
+              ? "ပို့မရ"
+              : voucher.delivery_status.status_mm
         },
         Note: "remark"
       }
@@ -1061,6 +1067,19 @@ export default {
     CostInformation
   },
   methods: {
+    searchPhone: _.debounce(async function(val) {
+      this.isPhoneSearchLoading = true;
+      this.customers = (await this.$api.getCustomers(
+        this.$axios,
+        this.jwt,
+        `${process.env.baseUrl}/customers?search=${val}`
+      )).data;
+      if (!_.isEmpty(this.customers) && !this.normalForms[0].receiver.name) {
+        this.normalForms[0].receiver = _.cloneDeep(this.customers[0]);
+      }
+      this.customers = [];
+      this.isPhoneSearchLoading = false;
+    }, 1000),
     ...mapActions({
       setNavigationShow: "navigation/setShow",
       setNavigationUrl: "navigation/setUrl"
@@ -1359,7 +1378,8 @@ export default {
       });
       this.editingIndex = 0;
       await this.$nextTick();
-      this.$refs["normal-0-receiverName"][0].focus();
+      // this.$refs["normal-0-receiverName"][0].focus();
+      this.$refs["normal-0-receiverPhone"][0].focus();
     },
     async createNewBusStationVoucher() {
       if (this.is_closed) return;

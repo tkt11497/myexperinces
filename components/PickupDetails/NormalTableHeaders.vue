@@ -1,8 +1,8 @@
 <template>
   <v-layout>
     <v-flex text-xs-center xs1 class="cell font-weight-bold">Voucher No</v-flex>
-    <v-flex text-xs-center xs1 class="cell font-weight-bold">Customer</v-flex>
     <v-flex text-xs-center xs1 class="cell font-weight-bold">Phone</v-flex>
+    <v-flex text-xs-center xs1 class="cell font-weight-bold">Customer</v-flex>
     <v-flex text-xs-center xs2 class="cell font-weight-bold">Address</v-flex>
     <v-flex text-xs-center xs1 class="cell font-weight-bold">To</v-flex>
     <v-flex text-xs-center xs2 class="cell font-weight-bold">Note</v-flex>

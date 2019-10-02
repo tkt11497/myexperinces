@@ -33,7 +33,7 @@ import busDropOffs from "./busDropOffs";
 import agents from "./agents";
 import attendances from "./attendances";
 import dashboard from "./dashboard";
-
+import customers from "./customers";
 
 export default {
   ...cities,
@@ -70,5 +70,6 @@ export default {
   ...busDropOffs,
   ...agents,
   ...attendances,
-  ...dashboard
+  ...dashboard,
+  ...customers
 };
