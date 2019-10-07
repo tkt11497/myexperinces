@@ -46,7 +46,7 @@
                 <h3 class="title headline">Total Pickups</h3>
               </v-card-title>
               <v-card-text>
-                <p class="subheading text-xs-center">{{ total_pickups_count }} Vouchers</p>
+                <p class="subheading text-xs-center">{{ total_pickups_count }} Pickups</p>
               </v-card-text>
             </v-card>
           </v-flex>
