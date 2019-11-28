@@ -66,7 +66,7 @@
                 <v-flex xs12 sm8 md4>
                   <v-card class="elevation-12">
                     <form @submit.prevent="logIn" @keyup.enter="logIn">
-                      <v-toolbar dark color="primary">
+                      <v-toolbar dark color="#283E4A">
                         <v-toolbar-title>Login</v-toolbar-title>
                         <v-spacer></v-spacer>
                         <v-chip color="teal" class="ml-0" small>2-9-2019</v-chip>
@@ -74,7 +74,7 @@
                       <v-card-text>
                         <v-form>
                           <v-text-field
-                            browser-autocomplete="off"
+                            autocomplete="off"
                             prepend-icon="person"
                             v-model="userName"
                             name="userName"
@@ -85,7 +85,7 @@
                             :error-messages="errors.first('userName')"
                           ></v-text-field>
                           <v-text-field
-                            browser-autocomplete="off"
+                            autocomplete="off"
                             id="password"
                             prepend-icon="lock"
                             name="password"
@@ -114,7 +114,7 @@
                           <v-progress-circular v-if="isLoading" indeterminate color="green"></v-progress-circular>
                         </v-card-text>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" :disabled="isLoginDisabled" type="submit">Login</v-btn>
+                        <v-btn color="primary" :disabled="isLoginDisabled||isLoading" type="submit">Login</v-btn>
                       </v-card-actions>
                     </form>
                   </v-card>
@@ -162,7 +162,7 @@ export default {
   computed: {
     isLoginDisabled() {
       if (!this.userName || !this.password) return true;
-    }
+    },
   },
   methods: {
     ...mapActions({
@@ -204,7 +204,7 @@ export default {
             api.getCallStatuses($axios, jwt), //11
             api.getStoreStatuses($axios, jwt), //12
             api.getLogStatuses($axios, jwt), // 13
-            api.getDelegateDurations($axios, jwt) // 14
+            api.getDelegateDurations($axios, jwt)// 14
             // api.getBuses($axios, jwt) //15
           ]);
           responses.forEach(({ status }) => {
@@ -239,6 +239,7 @@ export default {
           ]);
           this.$router.push("/dashboard");
         }
+        console.log(this.$store.getters['auth/fburl'])
         if (response.status === 2) {
           this.errorMessage = response.message;
           this.snackbar = true;

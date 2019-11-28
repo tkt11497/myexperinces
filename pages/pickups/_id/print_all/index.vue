@@ -18,8 +18,8 @@
       <h1 class="print-font-size font-weight-bold text-xs-center mt-2">ပေးပို့သူ</h1>
       <v-layout row>
         <v-flex
-          xs12
-          class="larger-print-font-size font-weight-bold text-xs-left"
+          xs12 
+          class="larger-print-font-size font-weight-bold text-xs-left ml-7"
         >Name: {{ data.sender.name }}</v-flex>
       </v-layout>
       <v-layout row>

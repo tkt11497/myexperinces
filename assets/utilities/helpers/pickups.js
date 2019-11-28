@@ -1,8 +1,4 @@
-export const getSenderZone = ({
-  sender_type,
-  sender,
-  sender_associate
-}) => {
+export const getSenderZone = ({ sender_type, sender, sender_associate }) => {
   try {
     if (sender_type === "Customer") {
       if (sender.zone) return sender.zone.name;
@@ -16,25 +12,17 @@ export const getSenderZone = ({
   }
 };
 
-export const getZonesValues = ({
-  citiesRecords,
-  city
-}) => {
+export const getZonesValues = ({ citiesRecords, city }) => {
   try {
     const foundCity = citiesRecords.find(record => record.name === city);
-    const zonesValues = foundCity.zones.map(({
-      name
-    }) => name);
+    const zonesValues = foundCity.zones.map(({ name }) => name);
     return zonesValues;
   } catch (error) {
     return [];
   }
 };
 
-export const mapPickups = ({
-  pickups,
-  cities
-}) => {
+export const mapPickups = ({ pickups, cities }) => {
   return pickups.map(pickup => {
     const {
       id,
@@ -45,12 +33,15 @@ export const mapPickups = ({
       note,
       sender_associate,
       created_at,
-      voucher_count
+      voucher_count,
+      is_pickuped,
+      total_prepaid_amount,
+      pickup_fee
     } = pickup;
     const city =
-      sender_type === "Customer" ?
-      sender.city.name :
-      sender_associate.city.name;
+      sender_type === "Customer"
+        ? sender.city.name
+        : sender_associate.city.name;
     return {
       isLocked: true,
       city,
@@ -65,20 +56,29 @@ export const mapPickups = ({
       }),
       id,
       sender_city_id: sender_type === "Customer" ? sender.city.id : "",
-      sender_zone_id: sender_type === "Customer" ? (sender.zone ? sender.zone.id : "") : "",
+      sender_zone_id:
+        sender_type === "Customer" ? (sender.zone ? sender.zone.id : "") : "",
       invoiceId: pickup_invoice,
       sender: sender.name,
       merchantId: sender.id,
       branchId: sender_type === "Merchant" ? sender_associate.id : "",
       status: sender_type,
       customer_id: sender_type === "Customer" ? sender.id : "",
-      phone: sender_type === "Customer" ?
-        sender.phone : sender_associate.phones.join(", "),
-      address: sender_type === "Customer" ? sender.address : sender_associate.address,
+      phone:
+        sender_type === "Customer"
+          ? sender.phone
+          : sender_associate.phones.join(", "),
+      address:
+        sender_type === "Customer" ? sender.address : sender_associate.address,
       openedBy: opened_by ? opened_by.name : "",
       note: note,
       createdAt: created_at,
-      voucher_count: voucher_count
+      voucher_count: voucher_count,
+      branchname: sender_associate.label,
+      is_pickuped: is_pickuped ? "Picked up" : "Not pick up yet",
+      opened_by,
+      total_prepaid_amount,
+      pickup_fee
     };
   });
 };
@@ -96,9 +96,7 @@ export const getStaffsData = staffs => {
     value: staff.name
   }));
   const staffsAutoCompletesValues = staffsAutoCompletesKeysValues.map(
-    ({
-      value
-    }) => value
+    ({ value }) => value
   );
   return {
     staffsAutoCompletesKeysValues,
@@ -121,11 +119,8 @@ export const getMerchantsData = merchants => {
   }));
 
   const merchantsAutoCompletesValues = merchantsMapped.map(
-    ({
-      merchantName,
-      address,
-      label
-    }) => `${merchantName} - ${label} - ${address}`
+    ({ merchantName, address, label }) =>
+      `${merchantName} - ${label} - ${address}`
   );
   return {
     merchantsCleaned: merchantsMapped,

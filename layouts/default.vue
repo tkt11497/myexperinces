@@ -1,66 +1,75 @@
 <template>
   <v-app>
-    <v-navigation-drawer v-model="drawer" absolute temporary style="height: 100vh">
+    <v-navigation-drawer
+      v-model="drawer"
+      :mini-variant="miniVariant"
+      :clipped="clipped"
+      fixed
+      app
+      temporary
+    >
       <v-list>
+        <v-list-item to="/dashboard/profile" router exact>
+          <v-list-item-action>
+            <v-icon>person</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="user[0].name" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item to="/dashboard" router exact>
+          <v-list-item-action>
+            <v-icon>memory</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="'Dashboard'" />
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+      <v-divider></v-divider>
+      <v-list v-for="(item, index) in items" :key="index">
+        <!-- <v-list-item avatar>
+          <v-list-item-action>
+            <v-icon>{{ item.header.icon }}</v-icon>
+          </v-list-item-action>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.header.name" />
+          </v-list-item-content>
+        </v-list-item>-->
         <v-list>
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <v-icon>person</v-icon>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>{{ user[0].name }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
+          <v-list-item v-for="(item, index) in item.items" :key="index" :to="item.to" router exact>
+            <v-list-item-action>
+              <v-icon>{{ item.icon }}</v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="item.name" />
+            </v-list-item-content>
+          </v-list-item>
         </v-list>
-        <v-list v-for="(item, index) in items" :key="index">
-          <v-list-tile avatar>
-            <v-list-tile-avatar>
-              <v-icon>{{ item.header.icon }}</v-icon>
-            </v-list-tile-avatar>
-            <v-list-tile-content>
-              <v-list-tile-title>{{ item.header.name }}</v-list-tile-title>
-            </v-list-tile-content>
-          </v-list-tile>
-          <v-list class="ml-5">
-            <v-list-tile
-              avatar
-              v-for="(item, index) in item.items"
-              :key="index"
-              @click="go(item.to)"
-            >
-              <v-list-tile-avatar>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-tile-avatar>
-              <v-list-tile-content>
-                <v-list-tile-title>{{ item.name }}</v-list-tile-title>
-              </v-list-tile-content>
-            </v-list-tile>
-          </v-list>
-          <v-divider></v-divider>
-        </v-list>
+        <v-divider></v-divider>
       </v-list>
     </v-navigation-drawer>
-    <v-content>
-      <v-layout row align-center>
-        <v-flex xs1>
-          <v-layout row align-center>
-            <button @click="triggerDrawer" style="padding: 20px" class="no-print">
-              <v-icon large>format_indent_increase</v-icon>
-            </button>
-            <Back class="no-print"></Back>
-          </v-layout>
-        </v-flex>
+    <v-app-bar fixed color="#283E4A" dark app class="no-print">
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
+      <!-- <Back class="no-print"></Back> -->
 
-        <!-- <v-flex xs8 class="title">
+      <!-- <v-flex xs8 class="title">
           <span>{{ title }}</span>
-        </v-flex>-->
-        <v-flex xs10 text-xs-center>
-          <h1 class="display-1 font-weight-black no-print">{{ title }}</h1>
-        </v-flex>
-      </v-layout>
+      </v-flex>-->
+      <v-toolbar-title style="color:white" v-text="title" />
+      <v-spacer />
+    </v-app-bar>
 
+    <v-content>
       <nuxt />
     </v-content>
+
+    <v-footer :fixed="fixed" app>
+      <span>&copy; 2019</span>
+    </v-footer>
   </v-app>
 </template>
 
@@ -72,16 +81,21 @@ export default {
   components: { Back },
   data() {
     return {
+      rightDrawer: false,
+      right: true,
+      fixed: false,
+      clipped: false,
+      miniVariant: false,
       drawer: false,
       items: [
         // {
         // header: { name: "Operation", icon: "departure_board" },
         // items: [{ name: "Pick Up", to: "/pickups", icon: "departure_board" }]
         // },
-        {
-          header: { name: "Dashboard", icon: "memory" },
-          items: [{ name: "Dashboard", to: "/dashboard", icon: "memory" }]
-        },
+        // {
+        //   header: { name: "Dashboard", icon: "memory" },
+        //   items: [{ name: "Dashboard", to: "/dashboard", icon: "memory" }]
+        // },
         {
           header: { name: "General", icon: "memory" },
           items: [
@@ -91,12 +105,44 @@ export default {
             //   icon: "assignment"
             // },
             { name: "Pick Up", to: "/pickups", icon: "departure_board" },
-            {
-              name: "Pickups List",
-              to: "/dashboard/universal_pickup_sheet",
-              icon: "assignment"
+               {
+              name: "Total Parcels",
+              to: "/dashboard/total_parcels",
+              icon: "work"
             },
-            { name: "Profile", to: "/dashboard/profile", icon: "person" },
+            { name:"Return", to:"/return_sheet", icon:"mdi-undo"},
+            { name:"Finance", to:"/merchant_sheet", icon:"screen_share"},
+          
+            // {
+            //   name: "Delivering Parcles",
+            //   to: "/dashboard/delivering_vouchers",
+            //   icon: "assignment"
+            // },
+            // {
+            //   name: "Can't Deliver Parcles",
+            //   to: "/dashboard/cant_deliver_vouchers",
+            //   icon: "assignment"
+            // },
+            // {
+            //   name: "Delivered Parcles",
+            //   to: "/dashboard/delivered_vouchers",
+            //   icon: "assignment"
+            // },
+            // {
+            //   name: "Parcles To Be Paid",
+            //   to: "/dashboard/vouchers_to_be_paid",
+            //   icon: "assignment"
+            // },
+            // {
+            //   name: "Paid Parcles",
+            //   to: "/dashboard/paid_vouchers",
+            //   icon: "assignment"
+            // },
+            // {
+            //   name: "Return Parcles",
+            //   to: "/dashboard/return_vouchers",
+            //   icon: "assignment"
+            // },
             { name: "Log Out", to: "/dashboard/log_out", icon: "exit_to_app" }
           ]
         }
@@ -116,9 +162,6 @@ export default {
     })
   },
   methods: {
-    go(to) {
-      this.$router.push(to);
-    },
     triggerDrawer() {
       this.drawer = !this.drawer;
     }

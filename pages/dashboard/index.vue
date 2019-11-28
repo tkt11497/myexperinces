@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <v-layout row wrap>
-      <v-flex xs2 offset-xs1>
+      <v-flex xs12 offset-md1 md2 offset-xs1>
         <v-layout align-center row wrap>
           <v-menu
             ref="dateMenu"
@@ -18,7 +18,7 @@
           >
             <template v-slot:activator="{ on }">
               <v-text-field
-                browser-autocomplete="off"
+                autocomplete="off"
                 v-model="date"
                 label="Pick Date"
                 prepend-icon="event"
@@ -29,63 +29,120 @@
             </template>
             <v-date-picker v-model="date" no-title scrollable>
               <v-spacer></v-spacer>
-              <v-btn flat color="primary" @click="dateMenu = false">Cancel</v-btn>
-              <v-btn flat color="primary" @click="$refs.dateMenu.save(date)">OK</v-btn>
+              <v-btn text color="primary" @click="dateMenu = false">Cancel</v-btn>
+              <v-btn text color="primary" @click="$refs.dateMenu.save(date)">OK</v-btn>
             </v-date-picker>
           </v-menu>
         </v-layout>
       </v-flex>
     </v-layout>
 
-    <v-layout row wrap>
-      <v-flex xs10 offset-xs1>
-        <v-layout row wrap align-start justify-start>
-          <v-flex xs3>
-            <v-card class="pa-1 ma-2">
-              <v-card-title primary-title>
-                <h3 class="title headline">Total Pickups</h3>
-              </v-card-title>
-              <v-card-text>
-                <p class="subheading text-xs-center">{{ total_pickups_count }} Pickups</p>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs3>
-            <v-card class="pa-1 ma-2">
-              <v-card-title primary-title>
-                <h3 class="title headline">Total Vouchers</h3>
-              </v-card-title>
-              <v-card-text>
-                <p class="subheading text-xs-center">{{ total_vouchers_count }} Vouchers</p>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs3>
-            <v-card class="pa-1 ma-2">
-              <v-card-title primary-title>
-                <h3 class="title headline">Door To Door Vouchers</h3>
-              </v-card-title>
-              <v-card-text>
-                <p class="subheading text-xs-center">{{ total_dtd_vouchers_count }} Vouchers</p>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs3>
-            <v-card class="pa-1 ma-2">
-              <v-card-title primary-title>
-                <h3 class="title headline">Waybill Vouchers</h3>
-              </v-card-title>
-              <v-card-text>
-                <p class="subheading text-xs-center">{{ total_waybill_vouchers_count }} Vouchers</p>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-        </v-layout>
-      </v-flex>
-    </v-layout>
+    <v-col md11 offset-md="1">
+      <v-layout row wrap class="ml-4">
+        <v-flex xs12 sm8 md3 class="ma-2">
+        
+          <material-stats-card
+            color="primary"
+            icon="mdi-truck"
+            :value="`${total_pickups_count} pickups`"
+            title="Pickups"
+            sub-icon="mdi-calendar"
+            :sub-text="total"
+          />
+        
+        </v-flex>
+        <v-flex xs12 sm8 md3 class="ma-2">
+         
+          <material-stats-card
+            color="orange"
+            icon="work"
+            :value="`${total_vouchers_count} Parcels`"
+            title="Total Parcels"
+            sub-icon="mdi-calendar"
+            :sub-text="total"
+          />
+          
+        </v-flex>
+        <v-flex xs12 sm8 md3 class="ma-2">
+         
+          <material-stats-card
+            color="teal"
+            icon="flight_takeoff"
+            :value="`${total_delivering_vouchers} Parcels`"
+            title="Delivering"
+            smallValue="Parcels"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+        <v-flex xs12 sm8 md3 class="ma-2">
+          <material-stats-card
+            color="green"
+            icon="mdi-airplane"
+            :value="`${total_delivered_vouchers} Parcels`"
+            title="Delivered" 
+            smallValue="Parcels"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+        <v-flex xs12 sm8 md3 class="ma-2">
+          <material-stats-card
+            color="purple"
+            icon="flight_land"
+            title="Can't Deliver"
+            smallValue="Parcels"
+            :value="`${total_not_delivered_vouchers} Parcels`"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+         <v-flex xs12 sm8 md3 class="ma-2">
+          <material-stats-card
+            color="red"
+            icon="mdi-undo"
+            title="Return"
+            smallValue="Parcels"
+            :value="`${total_returned_vouchers} Parcels Received / ${total_return_vouchers} Pending`"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+              <v-flex xs12 sm8 md3 class="ma-2">
+          <material-stats-card
+            color="#002C6D"
+            icon="screen_share"
+            title="Parcels Tobe Paid"
+            :value="`${total_merchant_sheetVouchers} Parcels `"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+              <v-flex xs12 sm8 md3 class="ma-2">
+          <material-stats-card
+            color="#002C6D"
+            icon="cloud_done"
+            title="Paid"
+            smallValue="Parcels"
+            :value="`${total_merchant_sheet_paid_vouchers} Parcels `"
+            sub-icon="mdi-calendar"
+            sub-text="total"
+          />
+        </v-flex>
+      </v-layout>
+    </v-col>
   </v-container>
 </template>
-
+<style scoped>
+.v-card--reveal {
+  align-items: center;
+  bottom: 0;
+  justify-content: center;
+  opacity: 0.5;
+  position: absolute;
+  width: 100%;
+}
+</style>
 <script>
 import { mapGetters } from "vuex";
 import {
@@ -96,9 +153,16 @@ export default {
   middleware: ["auth"],
   data() {
     return {
-      date: new Date().toISOString().substr(0, 10),
-      dateMenu: false
+      date: null,
+      total:"Total",
+      dateMenu: false,
+      timer: true
     };
+  },
+  created() {
+    setTimeout(() => {
+      this.timer = false;
+    }, 2000);
   },
   computed: {
     ...mapGetters({
@@ -120,6 +184,7 @@ export default {
     context.store.commit("title/setTitle", "Dashboard");
 
     // context.redirect("/pickups");
+    console.log(data);
     return {
       ...data
     };
@@ -127,7 +192,7 @@ export default {
   methods: {
     async onChangeDate() {
       if (!event) {
-        const data = await this.$api.getDashboard(
+        const data = await this.$api.getDashboard_bydate(
           this.$axios,
           this.jwt,
           this.date
@@ -137,6 +202,7 @@ export default {
           (this.total_dtd_vouchers_count = data.total_dtd_vouchers_count),
           (this.total_waybill_vouchers_count =
             data.total_waybill_vouchers_count);
+            this.total=this.date
       }
     }
   }

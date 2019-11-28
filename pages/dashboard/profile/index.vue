@@ -12,7 +12,7 @@
               <v-container grid-list-md>
                 <v-layout row wrap>
                   <v-text-field
-                    browser-autocomplete="off"
+                    autocomplete="off"
                     label="Name"
                     v-model="merchant.name"
                     name="name"
@@ -22,17 +22,16 @@
                     :error-messages="errors.first('name')"
                   ></v-text-field>
                 </v-layout>
-                <v-layout row wrap>
+                <!-- <v-layout row wrap>
                   <v-btn
                     color="primary"
                     @click="change_password = !change_password "
                     class="ml-0"
                   >{{ change_password ? "Cancel" : "Change Password" }}</v-btn>
-                </v-layout>
+                </v-layout>-->
                 <v-layout row wrap>
                   <v-text-field
-                    v-show="change_password"
-                    browser-autocomplete="off"
+                    autocomplete="off"
                     :append-icon="
                   isPasswordHidden ? 'visibility' : 'visibility_off'
                 "
@@ -41,15 +40,14 @@
                     label="Old Password"
                     v-model="merchant.old_password"
                     name="old_password"
-                    v-validate="{ required: this.change_password }"
+                    v-validate="{ required: this.is_updatepassword }"
                     :error="!!errors.first('old_password')"
                     :error-messages="errors.first('old_password')"
                   ></v-text-field>
                 </v-layout>
                 <v-layout row wrap>
                   <v-text-field
-                    v-show="change_password"
-                    browser-autocomplete="off"
+                    autocomplete="off"
                     :append-icon="
                   isPasswordHidden ? 'visibility' : 'visibility_off'
                 "
@@ -58,24 +56,28 @@
                     label="New Password"
                     v-model="merchant.new_password"
                     name="new_password"
-                    v-validate="{ required: this.change_password }"
+                    v-validate="{ required: this.is_updatepassword }"
                     :error="!!errors.first('new_password')"
                     :error-messages="errors.first('new_password')"
-                  ></v-text-field>
+                    loading
+                  >
+                    <template v-slot:progress>
+                      <v-progress-linear :value="progress" :color="color" absolute height="7"></v-progress-linear>
+                    </template>
+                  </v-text-field>
                 </v-layout>
                 <v-layout row wrap>
                   <v-text-field
-                    v-show="change_password"
-                    browser-autocomplete="off"
+                    autocomplete="off"
                     :append-icon="
                   isPasswordHidden ? 'visibility' : 'visibility_off'
                 "
                     @click:append="() => (isPasswordHidden = !isPasswordHidden)"
                     :type="isPasswordHidden ? 'password' : 'text'"
-                    label="new_password_confirmation"
+                    label="new password confirmation"
                     v-model="merchant.new_password_confirmation"
                     name="new_password_confirmation"
-                    v-validate="{ required: this.change_password }"
+                    v-validate="{ required: this.is_updatepassword }"
                     :error="!!errors.first('new_password_confirmation')"
                     :error-messages="errors.first('new_password_confirmation')"
                   ></v-text-field>
@@ -86,6 +88,7 @@
               <v-spacer></v-spacer>
               <!-- <v-btn color="primary" flat @click="closeForm()">Cancel</v-btn> -->
               <v-btn color="primary" type="submit">Save</v-btn>
+              <v-btn color="primary" @click="oncancel">Cancel</v-btn>
             </v-card-actions>
           </form>
         </v-card>
@@ -106,7 +109,7 @@
           <v-card-title>
             <v-spacer></v-spacer>
             <v-text-field
-              browser-autocomplete="off"
+              autocomplete="off"
               v-model="search"
               append-icon="search"
               label="Search"
@@ -236,7 +239,26 @@ export default {
     ...mapGetters({
       jwt: "auth/jwt",
       user: "auth/user"
-    })
+    }),
+    is_updatepassword() {
+      if (
+        this.merchant.old_password ||
+        this.merchant.new_password_confirmation ||
+        this.merchant.new_password
+      ) {
+        return true;
+      }
+      return false;
+    },
+    progress() {
+      if (this.merchant.new_password) {
+        return Math.min(100, this.merchant.new_password.length * 16.66);
+      }
+      return Math.min(100, 0);
+    },
+    color() {
+      return ["error", "warning", "success"][Math.floor(this.progress / 40)];
+    }
   },
   methods: {
     ...mapActions({
@@ -244,9 +266,20 @@ export default {
       resetAuth: "auth/resetAuth",
       setTitle: "title/setTitle"
     }),
+    oncancel() {
+      this.merchant.old_password = "";
+      this.merchant.new_password = "";
+      this.merchant.new_password_confirmation = "";
+    },
     async onSave() {
       const isErrorFree = await this.$validator.validateAll();
       if (!isErrorFree) return;
+      if (!this.merchant.new_password) {
+        delete this.merchant.new_password;
+        delete this.merchant.old_password;
+        delete this.merchant.new_password_confirmation;
+      }
+      console.log(`test1`);
       const successMessage = "Update Successfully!";
 
       const { data, message, status } = (await api.updateMerchant(this)).data;
@@ -254,7 +287,7 @@ export default {
         this.setUser([this.merchant]);
         this.setTitle(this.merchant.name);
         await localforage.setItem("user", [this.merchant]);
-        if (this.change_password) {
+        if (this.is_updatepassword) {
           await localforage.clear();
           this.$router.push("/login");
         }
@@ -294,15 +327,15 @@ export default {
     }
   },
   watch: {
-    change_password: {
-      handler(val) {
-        if (!this.change_password) {
-          this.merchant.old_password = "";
-          this.merchant.new_password = "";
-          this.merchant.new_password_confirmation = "";
-        }
-      }
-    }
+    // change_password: {
+    //   handler(val) {
+    //     if (!this.change_password) {
+    //       this.merchant.old_password = "";
+    //       this.merchant.new_password = "";
+    //       this.merchant.new_password_confirmation = "";
+    //     }
+    //   }
+    // }
   },
   created() {
     this.setTitle(this.merchant.name);

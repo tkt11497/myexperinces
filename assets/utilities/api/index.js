@@ -34,7 +34,9 @@ import agents from "./agents";
 import attendances from "./attendances";
 import dashboard from "./dashboard";
 import customers from "./customers";
-
+import totalparcel from "./totalparcel";
+import merchant_sheet1 from "./merchant_sheet1";
+import returnsheet1 from"./returnsheet1"
 export default {
   ...cities,
   ...login,
@@ -71,5 +73,8 @@ export default {
   ...agents,
   ...attendances,
   ...dashboard,
-  ...customers
+  ...customers,
+  ...totalparcel,
+  ...merchant_sheet1,
+  ...returnsheet1
 };

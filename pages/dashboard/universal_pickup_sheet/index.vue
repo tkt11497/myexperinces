@@ -41,7 +41,7 @@
       </v-flex>
       <v-flex xs3 offset-xs5>
         <v-text-field
-          browser-autocomplete="off"
+          autocomplete="off"
           v-model="search"
           append-icon="search"
           label="Search"
@@ -62,54 +62,55 @@
           :rows-per-page-items="[25]"
           class="elevation-1"
         >
-          <template v-slot:items="props">
-            <td class="blue--text">
-              <nuxt-link
-                target="_blank"
-                :to="`/pickups/${props.item.id}`"
-              >{{ props.item.pickup_invoice }}</nuxt-link>
-            </td>
-            <td>{{ props.item.note || '--Empty--' }}</td>
-            <td>{{ props.item.sender_type }}</td>
-            <td>{{ props.item.sender.name }}</td>
-            <td>
-              {{
-              props.item.sender_type == "Customer"
-              ? props.item.sender.phone
-              : props.item.sender_associate.phones.join(", ")
-              }}
-            </td>
-            <td>
-              {{
-              props.item.sender_type == "Customer"
-              ? props.item.sender.city.name
-              : props.item.sender_associate.city.name
-              }}
-            </td>
-            <td>
-              {{
-              props.item.sender_type == "Customer"
-              ? typeof props.item.sender.zone === "object"
-              ? props.item.sender.zone.name
-              : ""
-              : typeof props.item.sender_associate.zone === "object"
-              ? props.item.sender_associate.zone.name
-              : ""
-              }}
-            </td>
-            <td>
-              {{
-              props.item.sender_type == "Customer"
-              ? props.item.sender.address
-              : props.item.sender_associate.address
-              }}
-            </td>
-            <td>{{ props.item.voucher_count }}</td>
-            <td>{{ props.item.opened_by ? props.item.opened_by.name : '' }}</td>
-            <td>{{ props.item.take_pickup_fee == 1 ? "Yes" : "No" }}</td>
-            <td>{{ props.item.pickup_fee }}</td>
-            <td>{{ props.item.total_prepaid_amount }}</td>
-            <td>{{ props.item.created_at }}</td>
+          <template v-slot:body="{items}">
+            <tbody>
+              <tr v-for="item in items" :key="item.id">
+                <td class="blue--text">
+                  <nuxt-link target="_blank" :to="`/pickups/${item.id}`">{{ item.pickup_invoice }}</nuxt-link>
+                </td>
+                <td>{{ item.note || '--Empty--' }}</td>
+                <td>{{ item.sender_type }}</td>
+                <td>{{ item.sender.name }}</td>
+                <td>
+                  {{
+                  item.sender_type == "Customer"
+                  ? item.sender.phone
+                  : item.sender_associate.phones.join(", ")
+                  }}
+                </td>
+                <td>
+                  {{
+                  item.sender_type == "Customer"
+                  ? item.sender.city.name
+                  : item.sender_associate.city.name
+                  }}
+                </td>
+                <td>
+                  {{
+                  item.sender_type == "Customer"
+                  ? typeof item.sender.zone === "object"
+                  ? item.sender.zone.name
+                  : ""
+                  : typeof item.sender_associate.zone === "object"
+                  ? item.sender_associate.zone.name
+                  : ""
+                  }}
+                </td>
+                <td>
+                  {{
+                  item.sender_type == "Customer"
+                  ? item.sender.address
+                  : item.sender_associate.address
+                  }}
+                </td>
+                <td>{{ item.voucher_count }}</td>
+                <td>{{ item.opened_by ? props.item.opened_by.name : '' }}</td>
+                <td>{{ item.take_pickup_fee == 1 ? "Yes" : "No" }}</td>
+                <td>{{ item.pickup_fee }}</td>
+                <td>{{ item.total_prepaid_amount }}</td>
+                <td>{{ item.created_at }}</td>
+              </tr>
+            </tbody>
           </template>
         </v-data-table>
       </v-flex>

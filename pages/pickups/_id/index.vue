@@ -31,297 +31,288 @@
         @createNewBusStationVoucher="createNewBusStationVoucher"
         @importVouchers="importVouchers"
       ></Info>
+      <!-- table starts here -->
+      <material-cardy color="#283E4A" title="Vouchers" ref="normal">
+        <v-btn
+          slot="buttons"
+          @click="createNewNormalVoucher"
+          dark
+          color="green"
+          small
+          class="mr-1"
+          :disabled="is_pickuped"
+        >New Voucher ctrl + 1</v-btn>
+        <!-- <v-btn slot="buttons" @click="sheet = !sheet" dark color="green" small class="mr-1">Add Order</v-btn> -->
+        <v-btn
+          slot="buttons"
+          dark
+          color="green"
+          small
+          target="_blank"
+          :href="`/pickups/${id}/print_all`"
+          class="mr-1"
+        >Print All Vouchers</v-btn>
+        <v-simple-table ref="table">
+          <template v-slot:default>
+            <thead>
+              <tr>
+                <th class="text-left green--text">Voucher No</th>
+                <th class="text-left">Phone</th>
+                <th class="text-left">Customer</th>
+                <th class="text-left">Address</th>
+                <th class="text-left">To</th>
+                <th class="text-left">Note</th>
+                <th class="text-left">Parcel Price</th>
+                <th class="text-left">Payment Status</th>
+                <th class="text-left">Delivery Fees</th>
+                <th class="text-left">Delivery Status</th>
+                <th class="text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody ref="tbody">
+              <tr v-show="normalForms.length === 0">
+                <td colspan="11" class="font-weight-bold">
+                  <p class="text-center">---Empty---</p>
+                </td>
+              </tr>
+              <tr
+                v-for="(normalVoucherForm, index) in normalForms"
+                :key="index"
+                @dblclick="goDetails(normalVoucherForm.id)"
+              >
+                <td>
+                  <v-text-field
+                    autocomplete="off"
+                    :value="getVoucherNumberAndStatus(normalVoucherForm)"
+                    disabled
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+                  <p v-else>{{ getVoucherNumberAndStatus(normalVoucherForm) }}</p>
+                </td>
+                <td>
+                  <v-text-field
+                    browser-autocomplete="off"
+                    :loading="isPhoneSearchLoading"
+                    @keyup.enter="searchPhone"
+                    type="tel"
+                    :ref="`normal-${index}-receiverPhone`"
+                    :name="`normal-${index}-receiverPhone`"
+                    v-model="normalVoucherForm.receiver.phone"
+                    :error="!normalVoucherForm.receiver.phone"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+                  <p v-else>{{ normalVoucherForm.receiver.phone }}{{index}}</p>
+                </td>
+                <td>
+                  <v-text-field
+                    autocomplete="off"
+                    :ref="`normal-${index}-receiverName`"
+                    :name="`normal-${index}-receiverName`"
+                    v-model="normalVoucherForm.receiver.name"
+                    type="'text'"
+                    :error="!normalVoucherForm.receiver.name"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
 
-      <v-layout mx-3 my-3>
-        <h6 class="title">Vouchers</h6>
-      </v-layout>
-      <NormalTableHeaders></NormalTableHeaders>
-
-      <v-layout v-show="normalForms.length === 0">
-        <v-flex class="cell font-weight-bold" xs12 text-xs-center>--- Empty --</v-flex>
-      </v-layout>
-
-      <div v-for="(normalVoucherForm, index) in normalForms" :key="index">
-        <form browser-autocomplete="off" v-if="!normalVoucherForm.isLocked">
-          <v-hover>
-            <v-layout>
-              <v-flex class="cell" xs1>
-                <v-text-field
-                  browser-autocomplete="off"
-                  :value="getVoucherNumberAndStatus(normalVoucherForm)"
-                  disabled
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="cell" xs1>
-                <v-text-field
-                  browser-autocomplete="off"
-                  :loading="isPhoneSearchLoading"
-                  @keyup.enter="searchPhone"
-                  type="tel"
-                  :ref="`normal-${index}-receiverPhone`"
-                  :name="`normal-${index}-receiverPhone`"
-                  v-model="normalVoucherForm.receiver.phone"
-                  :error="!normalVoucherForm.receiver.phone"
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="cell" xs1>
-                <v-text-field
-                  browser-autocomplete="off"
-                  :ref="`normal-${index}-receiverName`"
-                  :name="`normal-${index}-receiverName`"
-                  v-model="normalVoucherForm.receiver.name"
-                  type="'text'"
-                  :error="!normalVoucherForm.receiver.name"
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="cell" xs2>
-                <!-- address -->
-                <v-text-field
-                  browser-autocomplete="off"
-                  :ref="`normal-${index}-receiverAddress`"
-                  :name="`normal-${index}-receiverAddress`"
-                  v-model="normalVoucherForm.receiver.address"
-                  :error="!normalVoucherForm.receiver.address"
-                ></v-text-field>
-              </v-flex>
-              <v-flex xs1 class="cell">
-                <v-layout row wrap>
-                  <v-flex xs6>
-                    <v-autocomplete
-                      label="City"
-                      :ref="`normal-${index}-receiverCity`"
-                      :name="`normal-${index}-receiverCity`"
-                      v-model="normalVoucherForm.receiver_city"
-                      :items="citiesD2D"
-                      item-text="name"
-                      item-value="id"
-                      :disabled="normalVoucherForm.is_closed"
-                      @change="
+                  <p v-else>{{normalVoucherForm.receiver.name }}</p>
+                </td>
+                <td>
+                  <v-text-field
+                    browser-autocomplete="off"
+                    :ref="`normal-${index}-receiverAddress`"
+                    :name="`normal-${index}-receiverAddress`"
+                    v-model="normalVoucherForm.receiver.address"
+                    :error="!normalVoucherForm.receiver.address"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+                  <p v-else>{{ normalVoucherForm.receiver.address }}</p>
+                </td>
+                <td>
+                  <v-layout row wrap v-if="!normalVoucherForm.isLocked">
+                    <v-flex xs6>
+                      <v-autocomplete
+                        label="City"
+                        :ref="`normal-${index}-receiverCity`"
+                        :name="`normal-${index}-receiverCity`"
+                        v-model="normalVoucherForm.receiver_city"
+                        :items="citiesD2D"
+                        item-text="name"
+                        item-value="id"
+                        :disabled="normalVoucherForm.is_closed"
+                        @change="
                       id => onChangeCity({ id, form: normalVoucherForm })
                     "
-                      :error="!normalVoucherForm.receiver_city"
-                    ></v-autocomplete>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-autocomplete
-                      label="Zone"
-                      :ref="`normal-${index}-receiverZone`"
-                      :name="`normal-${index}-receiverZone`"
-                      v-model="normalVoucherForm.receiver_zone"
-                      :items="normalVoucherForm.receiverZones"
-                      item-text="name"
-                      item-value="id"
-                      :disabled="normalVoucherForm.is_closed"
-                      :error="!normalVoucherForm.receiver_zone"
-                    ></v-autocomplete>
-                  </v-flex>
-                </v-layout>
-              </v-flex>
-              <v-flex class="cell" xs2>
-                <!-- total_item_price -->
-                <v-text-field
-                  browser-autocomplete="off"
-                  :ref="`normal-${index}-remark`"
-                  :name="`normal-${index}-remark`"
-                  :disabled="normalVoucherForm.is_closed"
-                  v-model="normalVoucherForm.remark"
-                ></v-text-field>
-              </v-flex>
-              <v-flex class="cell" xs1>
-                <!-- total_item_price -->
-                <v-text-field
-                  browser-autocomplete="off"
-                  :ref="`normal-${index}-totalItemPrice`"
-                  :name="`normal-${index}-totalItemPrice`"
-                  :disabled="normalVoucherForm.is_closed"
-                  v-model="normalVoucherForm.total_item_price"
-                  type="number"
-                  min="0"
-                ></v-text-field>
-              </v-flex>
-              <!-- <v-flex xs2 class="cell">
-                <v-layout row wrap>
-                  <v-flex xs6>
-                    <v-text-field
-                      label="lwh"
-                      browser-autocomplete="off"
-                      :ref="`normal-${index}-global_scale`"
-                      :name="`normal-${index}-global_scale`"
-                      :disabled="normalVoucherForm.is_closed"
-                      v-model="normalVoucherForm.global_scale"
-                      type="number"
-                      min="0"
-                    ></v-text-field>
-                  </v-flex>
-                  <v-flex xs6>
-                    <v-text-field
-                      label="weight"
-                      browser-autocomplete="off"
-                      :ref="`normal-${index}-weight`"
-                      :name="`normal-${index}-weight`"
-                      :disabled="normalVoucherForm.is_closed"
-                      v-model="normalVoucherForm.weight"
-                      type="number"
-                      min="0"
-                    ></v-text-field>
-                  </v-flex>
-                </v-layout>
-              </v-flex>-->
-              <v-flex class="cell" xs1>
-                <v-autocomplete
-                  :ref="`normal-${index}-paymentType`"
-                  :name="`normal-${index}-paymentType`"
-                  v-model="normalVoucherForm.payment_type"
-                  :items="
+                        :error="!normalVoucherForm.receiver_city"
+                      ></v-autocomplete>
+                    </v-flex>
+                    <v-flex xs6>
+                      <v-autocomplete
+                        label="Zone"
+                        :ref="`normal-${index}-receiverZone`"
+                        :name="`normal-${index}-receiverZone`"
+                        v-model="normalVoucherForm.receiver_zone"
+                        :items="normalVoucherForm.receiverZones"
+                        item-text="name"
+                        item-value="id"
+                        :disabled="normalVoucherForm.is_closed"
+                        :error="!normalVoucherForm.receiver_zone"
+                      ></v-autocomplete>
+                    </v-flex>
+                  </v-layout>
+
+                  <p v-else>
+                    {{
+                    `${normalVoucherForm.receiver_city.name} - ${
+                    normalVoucherForm.receiver_zone
+                    ? normalVoucherForm.receiver_zone.name
+                    : ""
+                    }`
+                    }}
+                  </p>
+                </td>
+                <td>
+                  <v-text-field
+                    browser-autocomplete="off"
+                    :ref="`normal-${index}-remark`"
+                    :name="`normal-${index}-remark`"
+                    :disabled="normalVoucherForm.is_closed"
+                    v-model="normalVoucherForm.remark"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+
+                  <p v-else>{{ normalVoucherForm.remark || "--Empty--" }}</p>
+                </td>
+                <td>
+                  <v-text-field
+                    browser-autocomplete="off"
+                    :ref="`normal-${index}-totalItemPrice`"
+                    :name="`normal-${index}-totalItemPrice`"
+                    :disabled="normalVoucherForm.is_closed"
+                    v-model="normalVoucherForm.total_item_price"
+                    type="number"
+                    min="0"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+
+                  <p v-else>{{ normalVoucherForm.total_item_price }}</p>
+                </td>
+                <!-- <v-flex
+                xs2
+                class="cell"
+                >{{ `${normalVoucherForm.lwh || 20} - ${normalVoucherForm.weight}`}}</v-flex>-->
+                <td>
+                  <v-autocomplete
+                    :ref="`normal-${index}-paymentType`"
+                    :name="`normal-${index}-paymentType`"
+                    v-model="normalVoucherForm.payment_type"
+                    :items="
                   getNormalVoucherPaymentTypes({ form: normalVoucherForm })
                 "
-                  item-text="name_mm"
-                  item-value="id"
-                  :disabled="normalVoucherForm.is_closed"
-                  :error="!normalVoucherForm.payment_type"
-                ></v-autocomplete>
-              </v-flex>
-              <v-flex class="cell" xs1>
-                <v-text-field
-                  browser-autocomplete="off"
-                  :disabled="true"
-                  v-model="normalVoucherForm.total_delivery_amount"
-                  type="number"
-                  min="0"
-                ></v-text-field>
-              </v-flex>
-              <!-- <v-flex class="cell" xs1>
-                <v-autocomplete
-                  :ref="`normal-${index}-callStatus`"
-                  :name="`normal-${index}-callStatus`"
-                  v-model="normalVoucherForm.call_status"
-                  :items="callStatuses"
-                  item-text="status_mm"
-                  item-value="id"
-                ></v-autocomplete>
-              </v-flex>
-              <AppCell>
-                <v-autocomplete
-                  :ref="`normal-${index}-storeStatus`"
-                  :name="`normal-${index}-storeStatus`"
-                  :items="getStoreStatuses()"
-                  v-model="normalVoucherForm.store_status"
-                  item-text="status_mm"
-                  item-value="id"
-                ></v-autocomplete>
-              </AppCell>-->
-              <v-flex class="cell" xs1>
-                <v-text-field browser-autocomplete="off" :disabled="true" type="text" min="0"></v-text-field>
-              </v-flex>
-              <AppCell>
-                <v-btn
-                  color="green darken-1"
-                  flat
-                  icon
-                  @click="onSubmit"
-                  :ref="`normal-${index}-submit`"
-                  :name="`normal-${index}-submit`"
-                >
-                  <v-icon>done</v-icon>
-                </v-btn>
-                <v-btn
-                  color="red darken-1"
-                  flat
-                  icon
-                  @click="
+                    item-text="name_mm"
+                    item-value="id"
+                    :disabled="normalVoucherForm.is_closed"
+                    :error="!normalVoucherForm.payment_type"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-autocomplete>
+
+                  <p v-else>{{ normalVoucherForm.payment_type.name_mm }}</p>
+                </td>
+
+                <td>
+                  <v-text-field
+                    browser-autocomplete="off"
+                    :disabled="true"
+                    v-model="normalVoucherForm.total_delivery_amount"
+                    type="number"
+                    min="0"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+                  <p v-else>{{ normalVoucherForm.total_delivery_amount }}</p>
+                </td>
+                <!-- <AppCell>{{ normalVoucherForm.call_status.status_mm }}</AppCell>
+                <AppCell>{{ normalVoucherForm.store_status.id == 2 ? normalVoucherForm.store_status.status_mm : 'စောင့်ဆိုင်း' }}</AppCell>-->
+                <td>
+                  <v-text-field
+                    autocomplete="off"
+                    :disabled="true"
+                    type="text"
+                    min="0"
+                    v-if="!normalVoucherForm.isLocked"
+                  ></v-text-field>
+                  <p v-else>{{ normalVoucherForm.delivery_status.status}}</p>
+                </td>
+
+                <td>
+                  <v-layout v-if="!normalVoucherForm.isLocked">
+                    <v-btn
+                      color="green darken-1"
+                      flat
+                      icon
+                      @click="onSubmit"
+                      :ref="`normal-${index}-submit`"
+                      :name="`normal-${index}-submit`"
+                    >
+                      <v-icon>done</v-icon>
+                    </v-btn>
+                    <v-btn
+                      color="red darken-1"
+                      flat
+                      icon
+                      @click="
                   cancelForm({
                     form: normalVoucherForm,
                     forms: normalForms,
                     index
                   })
                 "
-                  :ref="`normal-${index}-cancel`"
-                  :name="`normal-${index}-cancel`"
-                >
-                  <v-icon>cancel</v-icon>
-                </v-btn>
-              </AppCell>
-            </v-layout>
-          </v-hover>
-        </form>
-        <button
-          :ref="'normal-' + index + '-rowButton'"
-          :name="`normal-${index}-button`"
-          style="width: 100%"
-          :class="[
-          sTable === 'normal' && index == sIndex ? 'row-active' : '',
-          'row-button'
-        ]"
-          @dblclick="goDetails(normalVoucherForm.id)"
-          v-else
-        >
-          <v-hover>
-            <v-layout slot-scope="{ hover }">
-              <AppCell>{{ getVoucherNumberAndStatus(normalVoucherForm) }}</AppCell>
-              <AppCell>{{ normalVoucherForm.receiver.phone }}</AppCell>
-              <AppCell>{{ normalVoucherForm.receiver.name }}</AppCell>
-              <v-flex xs2 class="cell">{{ normalVoucherForm.receiver.address }}</v-flex>
-              <v-flex xs1 class="cell">
-                {{
-                `${normalVoucherForm.receiver_city.name} - ${
-                normalVoucherForm.receiver_zone
-                ? normalVoucherForm.receiver_zone.name
-                : ""
-                }`
-                }}
-              </v-flex>
-              <v-flex xs2 class="cell">{{ normalVoucherForm.remark || "--Empty--" }}</v-flex>
-              <AppCell>{{ normalVoucherForm.total_item_price }}</AppCell>
-              <!-- <v-flex
-                xs2
-                class="cell"
-              >{{ `${normalVoucherForm.lwh || 20} - ${normalVoucherForm.weight}`}}</v-flex>-->
-              <AppCell>{{ normalVoucherForm.payment_type.name_mm }}</AppCell>
+                      :ref="`normal-${index}-cancel`"
+                      :name="`normal-${index}-cancel`"
+                    >
+                      <v-icon>cancel</v-icon>
+                    </v-btn>
+                  </v-layout>
 
-              <AppCell>{{ normalVoucherForm.total_delivery_amount }}</AppCell>
-              <!-- <AppCell>{{ normalVoucherForm.call_status.status_mm }}</AppCell>
-              <AppCell>{{ normalVoucherForm.store_status.id == 2 ? normalVoucherForm.store_status.status_mm : 'စောင့်ဆိုင်း' }}</AppCell>-->
-              <AppCell>{{ normalVoucherForm.delivery_status.id != 8 ? 'ပို့မရ' : normalVoucherForm.delivery_status.status_mm }}</AppCell>
-              <v-flex xs1 class="cell">
-                <v-layout :class="hover ? 'show' : 'hide'">
-                  <v-btn
-                    flat
-                    icon
-                    color="green"
-                    @click="onClickEdit"
-                    :name="'normal-' + index + '-editButton'"
-                  >
-                    <v-icon>edit</v-icon>
-                  </v-btn>
-                  <v-btn
-                    flat
-                    icon
-                    :disabled="normalVoucherForm.is_closed"
-                    color="red"
-                    @click="onClickDel"
-                    :name="'normal-' + index + '-delButton'"
-                  >
-                    <v-icon>delete</v-icon>
-                  </v-btn>
-                </v-layout>
-                <v-layout class="show">
-                  <v-btn
-                    flat
-                    icon
-                    color="grey"
-                    target="_blank"
-                    :href="`/vouchers/print?voucher_no=${normalVoucherForm.voucher_no}&created_at=${normalVoucherForm.created_at}&created_time=${normalVoucherForm.created_time}&sender_name=${sender.name}&sender_phone=${phones}
+                  <v-layout v-else>
+                    <v-btn
+                      v-show="!is_pickuped"
+                      flat
+                      icon
+                      color="green"
+                      @click="onClickEdit"
+                      :name="'normal-' + index + '-editButton'"
+                    >
+                      <v-icon>edit</v-icon>
+                    </v-btn>
+                    <v-btn
+                      flat
+                      icon
+                      v-show="!is_pickuped"
+                      color="red"
+                      @click="onClickDel"
+                      :name="'normal-' + index + '-delButton'"
+                    >
+                      <v-icon>delete</v-icon>
+                    </v-btn>
+                  </v-layout>
+                  <v-layout class="show" v-if="normalVoucherForm.isLocked">
+                    <v-btn
+                      flat
+                      icon
+                      color="grey"
+                      target="_blank"
+                      :href="`/vouchers/print?voucher_no=${normalVoucherForm.voucher_no}&created_at=${normalVoucherForm.created_at}&created_time=${normalVoucherForm.created_time}&sender_name=${sender.name}&sender_phone=${phones}
                     &receiver_name=${normalVoucherForm.receiver.name}&receiver_phone=${normalVoucherForm.receiver.phone}&receiver_other_phone=${normalVoucherForm.receiver.other_phone || '--Empty--'}&receiver_city_name=${normalVoucherForm.receiver_city.name}&receiver_zone_name=${ normalVoucherForm.receiver_zone ? normalVoucherForm.receiver_zone.name : '--Empty--' }&receiver_address=${normalVoucherForm.receiver.address || '--Empty--'}&remark=${normalVoucherForm.remark || '--Empty--'}&amount_to_collect_receiver=${normalVoucherForm.amount_to_collect_receiver}`"
-                  >
-                    <v-icon>print</v-icon>
-                  </v-btn>
-                </v-layout>
-              </v-flex>
-            </v-layout>
-          </v-hover>
-        </button>
-      </div>
-
+                    >
+                      <v-icon>print</v-icon>
+                    </v-btn>
+                  </v-layout>
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
+      </material-cardy>
+      <!-- table ends here -->
       <!-- <div>
         <v-layout row wrap mx-3 my-3>
           <h6 class="title">Bus Station Vouchers</h6>
@@ -822,6 +813,10 @@
         </v-flex>
       </v-layout>
     </div>
+
+    <!-- <v-bottom-sheet v-model="sheet" scrollable>
+      <material-order @addingordertopickup="createNewNormalVouchery" />
+    </v-bottom-sheet>-->
   </div>
 </template>
 
@@ -852,6 +847,7 @@ export default {
   middleware: ["auth"],
   data() {
     return {
+      sheet: false,
       customers: [],
       isPhoneSearchLoading: false,
       printNormalFormsHeaders: [
@@ -999,7 +995,7 @@ export default {
     }).stationForms;
 
     data.take_pickup_fee = !!data.take_pickup_fee;
-    context.store.commit("title/setTitle", "Pickup Details - Operation");
+    context.store.commit("title/setTitle", "Pickup Details ");
     return {
       untouchedState: null,
       snackbar: false,
@@ -1374,8 +1370,36 @@ export default {
         forms.splice(index, 1);
       }
     },
+    async createNewNormalVouchery(item) {
+      console.log(item);
+      if (this.is_closed) {
+        alert("this Pickup is closed");
+        return;
+      }
+      const isAnyUnlocked = this.checkUnlockedRow();
+      if (isAnyUnlocked) {
+        this.showSnackbar("Another row is being edited.");
+        return;
+      }
+      const { city, zone, cities } = this;
+      this.normalForms.unshift({
+        receiver: { name: item.name, phone: item.phno, address: item.address },
+        call_status: 1,
+        store_status: 1,
+        is_closed: false,
+        total_item_price: item.totalprice
+      });
+      this.editingIndex = 0;
+      await this.$nextTick();
+      // this.$refs["normal-0-receiverName"][0].focus();
+      this.sheet = false;
+      this.$refs["normal-0-receiverPhone"][0].focus();
+    },
     async createNewNormalVoucher() {
-      if (this.is_closed) return;
+      if (this.is_closed) {
+        alert("this Pickup is closed");
+        return;
+      }
       const isAnyUnlocked = this.checkUnlockedRow();
       if (isAnyUnlocked) {
         this.showSnackbar("Another row is being edited.");
@@ -1427,6 +1451,8 @@ export default {
       let isSuccess;
       if (sTable === "normal") {
         const form = sForm;
+        console.log(form);
+        console.log(sIndex);
         isSuccess = await this.submitNormalForm({ form, index: sIndex });
       } else if (sTable === "station") {
         isSuccess = await this.submitStationForm({
@@ -2010,7 +2036,7 @@ export default {
     },
     goDetails(voucherId) {
       return;
-      // this.$router.push("/vouchers/details?voucherId=" + voucherId);
+      //this.$router.push("/vouchers/details?voucherId=" + voucherId);
     }
   },
   mounted() {
@@ -2020,7 +2046,6 @@ export default {
   }
 };
 </script>
-
 <style scoped>
 #printPickup {
   display: none;
@@ -2036,3 +2061,4 @@ export default {
   }
 }
 </style>
+

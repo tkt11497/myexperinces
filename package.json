@@ -13,7 +13,8 @@
     "generate": "nuxt generate",
     "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/images/logo.icns --prune=true --out=release-builds",
     "package-win": "electron-packager . marathon-app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"Marathon App\"",
-    "package-linux": "electron-packager . marathon-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/images/marathon_logo.png --prune=true --out=release-builds"
+    "package-linux": "electron-packager . marathon-app --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/images/marathon_logo.png --prune=true --out=release-builds",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.1",
@@ -35,11 +36,17 @@
     "vue-server-renderer": "^2.6.10",
     "vue-shortkey": "^3.1.7",
     "vue-template-compiler": "^2.6.10",
-    "vuetify": "^1.5.16",
     "xlsx": "^0.15.1"
   },
   "devDependencies": {
+    "@nuxtjs/vuetify": "^1.9.0",
+    "coffee-loader": "^0.9.0",
+    "coffeescript": "^2.4.1",
+    "node-sass": "^4.13.0",
     "nodemon": "^1.19.1",
+    "pug": "^2.0.3",
+    "pug-plain-loader": "^1.0.0",
+    "sass-loader": "^8.0.0",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2"
   }
