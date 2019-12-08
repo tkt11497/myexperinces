@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "My remarkable Nuxt.js project",
   "productName": "Marathon Desktop App",
-  "author": "Kaung Myat Hein",
+  "author": "tmk",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development node server/index.js --watch server",
